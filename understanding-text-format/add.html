@@ -9,11 +9,21 @@
 
   <body>
     <script>
-
-    WebAssembly.instantiateStreaming(fetch('add.wasm'))
-    .then(obj => {
-       console.log(obj.instance.exports.add(1, 2));  // "3"
+    
+    // fix TypeError: Incorrect response MIME type. Expected 'application/wasm'
+    fetch('add.wasm').then(response => 
+      response.arrayBuffer()
+    ).then(bytes => 
+      WebAssembly.instantiate(bytes)
+    ).then(obj => {
+      console.log(obj.instance.exports.add(1, 2));
     });
+
+    // Defalut
+    // WebAssembly.instantiateStreaming(fetch('add.wasm'))
+    // .then(obj => {
+    //    console.log(obj.instance.exports.add(1, 2));  // "3"
+    // });
     </script>
   </body>
 
